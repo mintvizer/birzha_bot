@@ -1,0 +1,44 @@
+version: '3.1'
+
+services:
+
+  db:
+    container_name: database
+    image: postgres
+    restart: always
+    ports:
+    - 5432:5432
+  #  network_mode: "host"
+    env_file:
+      - ".env"
+
+  adminer:
+    container_name: adminer
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080
+
+
+  selenium:
+    restart: always
+    image: selenium/standalone-firefox
+    ports:
+      - 4444:4444
+
+
+  tgbot:
+    container_name: bot_xram
+    build:
+      context: .
+    command: python main.py
+    restart: always
+    links:
+      - selenium
+    env_file:
+      - ".env"
+    depends_on:
+      - db
+      - selenium
+
+

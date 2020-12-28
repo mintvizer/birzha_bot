@@ -1,0 +1,63 @@
+import asyncio
+
+from aiogram import executor
+from asyncpg import Connection
+
+from config import ADMIN_ID
+from db import create_db
+
+from loader import bot, db
+from parser import ParseBirzha
+import aioschedule as schedule
+
+
+class DBCommand:
+    pool: Connection = db
+    GET_VALUES_DB = "SELECT * FROM birzha WHERE status='New';"
+
+    SET_OLD = "UPDATE birzha SET status='Old' WHERE id=$1"
+    async def get_new_news(self):
+        return await self.pool.fetch(self.GET_VALUES_DB)
+
+    async def set_old(self, id):
+        await self.pool.execute(self.SET_OLD, id)
+
+db = DBCommand()
+
+async def on_shutdown(dp):
+    await bot.close()
+
+async def send_news_birzha():
+    parser = ParseBirzha()
+    await parser.parse()
+
+
+    news = await db.get_new_news()
+    if news == []:
+        return
+
+    for item in news:
+        text =f'🟢 ${item[1]}\nКомпания: {item[2]}\nгражданин: {item[3]}\nдолжность: {item[9]}\nP: покупка\nсредняя цена: {item[4]}\nакций: {item[6]}\nКуплено на сумму:{item[4]*item[6]}\nдата:{item[5]}\nКапитализация компании:{item[7]}млн'
+        await bot.send_message(ADMIN_ID, text)
+        await db.set_old(item[0])
+        await asyncio.sleep(10)
+
+
+async def open_shedule():
+    schedule.every(7).minutes.do(send_news_birzha)
+    while True:
+        await schedule.run_pending()
+        await asyncio.sleep(10)
+
+async def on_startup(dp):
+    # Подождем пока запустится база данных...
+    await create_db()
+    await asyncio.sleep(20)
+    asyncio.create_task(open_shedule())
+    await bot.send_message(ADMIN_ID, "Я запущен!")
+
+
+if __name__ == '__main__':
+    from handlers import dp
+
+    executor.start_polling(dp, on_shutdown=on_shutdown, on_startup=on_startup, skip_updates=False)
