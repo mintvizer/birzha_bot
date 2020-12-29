@@ -4,14 +4,14 @@ create table if not exists birzha
         constraint birzha_pk
             primary key,
     ticker                 varchar(30),
-    company_name           varchar(100),
-    insider_name           varchar(150),
-    price                  double precision,
+    owner           varchar(100),
+    relationship           varchar(150),
     date                   varchar(40),
-    insider_trading_shares integer,
-    marcet_cap             varchar(50),
-    status                 varchar(10),
-    insider_position           varchar(150)
+    cost                  double precision,
+    shares                    integer,
+    value             integer,
+    shares_total           integer,
+    status                 varchar(10)
 
 );
 
