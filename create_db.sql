@@ -10,10 +10,15 @@ create table if not exists birzha
     cost                  double precision,
     shares                    integer,
     value             integer,
+    transaction         varchar(30),
     shares_total           integer,
     status                 varchar(10)
 
 );
-
-alter table birzha
-    owner to postgres;
+create table if not exists ticket_sale
+(
+	id serial
+		constraint ticket_sale_pk
+			primary key,
+	ticket varchar(50)
+);

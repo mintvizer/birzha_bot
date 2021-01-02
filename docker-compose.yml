@@ -12,15 +12,15 @@ services:
     env_file:
       - ".env"
 
-  tgbot:
-    container_name: bot_birzha
-    build:
-      context: .
-    command: python main.py
-    restart: always
-    env_file:
-      - ".env"
-    depends_on:
-      - db
+#  tgbot:
+#    container_name: bot_birzha
+#    build:
+#      context: .
+#    command: python main.py
+#    restart: always
+#    env_file:
+#      - ".env"
+#    depends_on:
+#      - db
 
 

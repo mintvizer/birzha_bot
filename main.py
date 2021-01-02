@@ -35,22 +35,34 @@ async def send_news_birzha():
         return
 
     for item in news:
+
         text =f'🟢 ${item[1]}\n' \
               f'<b>Гражданин:</b> {item[2]}\n' \
               f'<b>Должность:</b> {item[3]}\n' \
-              f'<b>P:</b> Покупка\n' \
+              f'<b>P:</b> {item[8]}\n' \
               f'<b>Дата:</b> {item[4]}\n' \
               f'<b>Средняя цена:</b> {item[5]}\n' \
               f'<b>Количество:</b> {item[6]}\n' \
               f'<b>Куплено на сумму</b>: {item[7]}\n' \
-              f'<b>Осталось акций</b>: {item[8]} млн'
+              f'<b>Осталось акций</b>: {item[9]} млн'
+
+        if item[8] == 'Sale':
+            text = f'🔴 ${item[1]}\n' \
+                   f'<b>Гражданин:</b> {item[2]}\n' \
+                   f'<b>Должность:</b> {item[3]}\n' \
+                   f'<b>P:</b> {item[8]}\n' \
+                   f'<b>Дата:</b> {item[4]}\n' \
+                   f'<b>Средняя цена:</b> {item[5]}\n' \
+                   f'<b>Количество:</b> {item[6]}\n' \
+                   f'<b>Продано на сумму</b>: {item[7]}\n' \
+                   f'<b>Осталось акций</b>: {item[9]} млн'
         await bot.send_message(ADMIN_ID, text)
         await db.set_old(item[0])
         await asyncio.sleep(10)
 
 
 async def open_shedule():
-    schedule.every(7).minutes.do(send_news_birzha)
+    schedule.every(2).minutes.do(send_news_birzha)
     while True:
         await schedule.run_pending()
         await asyncio.sleep(10)
