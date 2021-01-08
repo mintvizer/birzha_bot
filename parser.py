@@ -65,7 +65,7 @@ async def parse_html(soup, find='BUY', sell_arr=None):
 
 
         if find == 'BUY':
-            if Value >= 1000000 and date >= today + timedelta(days=-2) and date <= today + timedelta(days=1):
+            if Value >= 1000000 and date >= today + timedelta(days=-4) and date <= today + timedelta(days=1):
 
                 adoption = True
                 for item in all_values:
@@ -80,7 +80,7 @@ async def parse_html(soup, find='BUY', sell_arr=None):
         if find == 'SELL':
             ad = False
             for i in sell_arr:
-                if Ticker == i[0].strip() and date >= today + timedelta(days=-2) and date <= today + timedelta(days=1):
+                if Ticker == i[0].strip() and date >= today + timedelta(days=-4) and date <= today + timedelta(days=1):
                     ad = True
             if ad:
                 adoption = True

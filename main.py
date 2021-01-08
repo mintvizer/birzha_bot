@@ -62,7 +62,7 @@ async def send_news_birzha():
 
 
 async def open_shedule():
-    schedule.every(2).minutes.do(send_news_birzha)
+    schedule.every(5).minutes.do(send_news_birzha)
     while True:
         await schedule.run_pending()
         await asyncio.sleep(10)
